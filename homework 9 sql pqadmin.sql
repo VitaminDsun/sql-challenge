@@ -1,11 +1,10 @@
 -- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
-
-
--- Link to schema: https://app.quickdatabasediagrams.com/#/
+-- Link to schema: https://app.quickdatabasediagrams.com/#/d/5YSthi
+-- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
 
 --1 List the following details of each employee: employee number, last name, first name, sex, and salary.
-select employees.emp_no, employees.last_name, employees.first_name, employees.sex, salaries.salary
+select employees.emp_no, employees.first_name, employees.last_name, employees.sex, salaries.salary
 from employees
 left join salaries
 on employees.emp_no = salaries.emp_no;
@@ -14,10 +13,10 @@ on employees.emp_no = salaries.emp_no;
 --2 List first name, last name, and hire date for employees who were hired in 1986.
 select * from employees;
 alter table employees
+from employees as e
 alter column hire_date type varchar
 using hire_date::date
 select e.first_name, e.last_name, e.hire_date 
-from employees as e
 where hire_date between '1986-01-01' and '1986-31-12'
 order by hire_date asc;
 
@@ -25,7 +24,7 @@ order by hire_date asc;
 
 --3 List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
 
-select departments.dept_no, departments.dept_name, dept_manager.emp_no, employees.last_name, employees.first_name
+select departments.dept_no, departments.dept_name, dept_manager.emp_no, employees.first_name, employees.last_name
 from departments
 left join dept_manager
 on departments.dept_no = dept_manager.dept_no
@@ -55,7 +54,7 @@ and last_name like '%B%';
 
 --6 List all employees in the Sales department, including their employee number, last name, first name, and department name.
 
-select employees.emp_no, employees.last_name, employees.first_name, departments.dept_name
+select employees.emp_no, employees.first_name, employees.last_name, departments.dept_name
 from employees
 left join dept_emp
 on employees.emp_no = dept_emp.emp_no
@@ -66,7 +65,7 @@ where departments.dept_name = 'Sales';
 
 --7 List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
-select employees.emp_no, employees.last_name, employees.first_name, departments.dept_name
+select employees.emp_no, employees.first_name, employees.last_name, departments.dept_name
 from employees
 left join dept_emp
 on employees.emp_no = dept_emp.emp_no
@@ -82,7 +81,8 @@ select count(last_name) as "Count", last_name as "Last Name"
 from employees
 group by last_name
 order by last_name desc;
---Homework Done
+
+
 CREATE TABLE "departments" (
     "dept_no" varchar(30)   NOT NULL,
     "dept_name" varchar(30)   NOT NULL,
@@ -90,7 +90,6 @@ CREATE TABLE "departments" (
         "dept_no"
      )
 );
-
 
 CREATE TABLE "dept_manager" (
     "dept_man_id" serial   NOT NULL,
@@ -100,7 +99,6 @@ CREATE TABLE "dept_manager" (
         "dept_man_id"
      )
 );
-
 
 CREATE TABLE "dept_emp" (
     "emp_no" integer   NOT NULL,
@@ -113,8 +111,8 @@ CREATE TABLE "employees" (
     "birth_date" date   NOT NULL,
     "first_name" varchar(30)   NOT NULL,
     "last_name" varchar(30)   NOT NULL,
-    "sex" varchar(30)   NOT NULL,
-    "hire_date" date   NOT NULL,
+    "sex" varchar   NOT NULL,
+    "hire_date" data   NOT NULL,
     CONSTRAINT "pk_employees" PRIMARY KEY (
         "emp_no"
      )
@@ -123,9 +121,9 @@ CREATE TABLE "employees" (
 CREATE TABLE "salaries" (
     "salary_id" serial   NOT NULL,
     "emp_no" integer   NOT NULL,
-    "salary" varchar   NOT NULL,
+    "salary" intger   NOT NULL,
     CONSTRAINT "pk_salaries" PRIMARY KEY (
-        "salary_id"
+        "salary_id","emp_no"
      )
 );
 
@@ -137,27 +135,21 @@ CREATE TABLE "titles" (
      )
 );
 
-ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_dept_no" FOREIGN KEY("dept_no")
-REFERENCES "departments" ("dept_no");
-
+ALTER TABLE "departments" ADD CONSTRAINT "fk_departments_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "dept_manager" ("dept_no");
 
 ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
 
-
 ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
-
-
-ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_dept_no" FOREIGN KEY("dept_no")
-REFERENCES "departments" ("dept_no");
-
 
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_emp_title_id" FOREIGN KEY("emp_title_id")
 REFERENCES "titles" ("title_id");
 
-
 ALTER TABLE "salaries" ADD CONSTRAINT "fk_salaries_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
+
+
 
 --worked with TA's and other studends to develop tables and schemata and code 
