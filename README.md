@@ -94,5 +94,7 @@ List all employees in the Sales and Development departments, including their emp
 
 List the frequency count of employee last names (i.e., how many employees share each last name) in descending order.
 
-Rubric
+
 Unit 9 Homework Rubric
+
+https://docs.google.com/document/d/1OksnTYNCT0v0E-VkhIMJ9-iG0_oXNwCZAJlKV0aVMKQ/edit
